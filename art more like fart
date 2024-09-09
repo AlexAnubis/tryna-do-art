@@ -1,0 +1,28 @@
+color grey = #D3D3D3;
+void setup() {
+size(700, 700);
+
+}
+
+
+void draw() {
+  
+  fill(grey);
+  beginShape();
+
+vertex(200, 00);
+vertex(130, 50);
+vertex(75, 114);
+vertex(52, 132);
+vertex(40, 143);
+vertex(37, 163);
+vertex(48, 184);
+vertex(66, 200);
+vertex(90, 206);
+vertex(108, 208);
+vertex(138, 198);
+vertex(209, 179);
+vertex(287, 170);
+println(mouseX, mouseY);
+endShape();
+}
