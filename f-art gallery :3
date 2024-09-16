@@ -1,0 +1,126 @@
+int patternIndex = 0; 
+int buttonX = 700; 
+int buttonY = 700; 
+int buttonW = 80; 
+int buttonH = 40; 
+
+void setup() {
+  size(800, 800); 
+  drawPattern(); 
+}
+
+void draw() {
+  drawButton(); 
+}
+
+void drawButton() {
+  fill(200);
+  stroke(0);
+  rect(buttonX, buttonY, buttonW, buttonH); 
+  fill(0);
+  textAlign(CENTER, CENTER);
+  text("Next", buttonX + buttonW / 2, buttonY + buttonH / 2);
+}
+
+
+void drawPattern() {
+  background(255);  
+  if (patternIndex == 0) {
+    pattern1();
+  } else if (patternIndex == 1) {
+    pattern2();
+  } else if (patternIndex == 2) {
+    pattern3();
+  }
+}
+
+void pattern1() {
+  translate(width / 2, height / 2); 
+  
+  float radius = 20; 
+  float maxRadius = min(width, height) / 2;  
+  
+
+  while (radius < maxRadius) {
+    strokeWeight(1);
+    stroke(0, 0, 0, map(radius, 20, maxRadius, 255, 50));
+    noFill();
+    ellipse(0, 0, radius * 2, radius * 2);
+    radius += 15;
+  }
+  
+
+  float angleStep = PI / 40;  
+  float angle = 0;  
+  float lineLength = maxRadius;  
+  while (angle < TWO_PI) {
+    strokeWeight(2);  
+    stroke(0, 50, 150, 150); 
+    line(0, 0, lineLength * cos(angle), lineLength * sin(angle)); 
+    angle += angleStep;  
+  }
+}
+
+void pattern2() {
+
+  translate(width / 2, height / 2);  
+  int numLayers = 12; 
+  int maxSides = 10; 
+  float initialRadius = 30; 
+  float layerIncrement = 20; 
+
+  for (int i = 0; i < numLayers; i++) {
+    float currentRadius = initialRadius + i * layerIncrement; 
+    int sides = int(map(i, 0, numLayers, 3, maxSides));  
+    float angleStep = TWO_PI / sides; 
+
+    pushMatrix(); 
+    rotate(radians(i * 10));
+    scale(1.0 + i * 0.05);
+
+    beginShape();
+    for (int j = 0; j < sides; j++) {
+      float angle = j * angleStep;
+      float x = cos(angle) * currentRadius;
+      float y = sin(angle) * currentRadius;
+      fill(map(j, 0, sides, 0, 255), random(100, 255), random(100, 255), 150);
+      stroke(100);
+      strokeWeight(1.5);
+      vertex(x, y);
+    }
+    endShape(CLOSE); 
+    popMatrix(); 
+  }
+}
+
+void pattern3() {
+
+  int numCircles = 15;
+  float maxDiameter = width / numCircles * 2;
+
+  for (int i = 0; i < numCircles; i++) {
+    for (int j = 0; j < numCircles; j++) {
+      float x = i * maxDiameter / 2;
+      float y = j * maxDiameter / 2;
+      
+      pushMatrix();
+      translate(x, y); 
+
+      float offset = dist(x, y, width / 2, height / 2);
+      float diameter = maxDiameter * 0.8 + sin(frameCount * 0.02 + offset * 0.05) * maxDiameter * 0.3; 
+      
+      fill(map(i + j, 0, numCircles * 2, 0, 255), map(offset, 0, width / 2, 255, 50), 150, 180);
+      noStroke(); 
+      ellipse(0, 0, diameter, diameter);
+
+      popMatrix();
+    }
+  }
+}
+void mousePressed() {
+
+  if (mouseX > buttonX && mouseX < buttonX + buttonW && mouseY > buttonY && mouseY < buttonY + buttonH) {
+    patternIndex = (patternIndex + 1) % 3; 
+    drawPattern(); 
+  }
+}
